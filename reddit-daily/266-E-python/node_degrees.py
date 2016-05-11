@@ -1,4 +1,4 @@
-# Reddit Daily Programmer #266 - Basic Graph Statistics: Node Degrees
+# Reddit Daily Programmer #266 [Easy] - Basic Graph Statistics: Node Degrees
 # https://www.reddit.com/r/dailyprogrammer/comments/4ijtrt/20160509_challenge_266_easy_basic_graph/
 
 # Python 3.5
