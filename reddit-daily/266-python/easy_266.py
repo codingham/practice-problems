@@ -9,8 +9,8 @@
 # and adjacency functions
 
 
-# Challenge -- returns an N element list representing the degree of ecah node
-def graphDegree(N, edges):
+# Challenge -- returns an N element list representing the degree of each node
+def degree(N, edges):
 	# Initialize a list to hold edge connections to each node
 	counter = [0]*N
 	
@@ -25,7 +25,7 @@ def graphDegree(N, edges):
 
 # Bonus -- returns an N-by-N matrix (as an N element list of N element lists) 
 # representing the adjacency of each node
-def graphAdjacency(N, edges):
+def adjacency(N, edges, directed=False):
 	# Create a 2 dimensional array using lists to hold the matrix
 	adjacency = [[0]*N for i in range(N)]
 	
@@ -33,15 +33,14 @@ def graphAdjacency(N, edges):
 	for (node_L, node_R) in edges:
 		adjacency[node_L-1][node_R-1] += 1
 		
-		# I assume this is an undirected graph -- comment out this line
-		# if you want to use this with a directed graph
-		adjacency[node_R-1][node_L-1] += 1
+		if not directed:
+			adjacency[node_R-1][node_L-1] += 1
 	
 	return adjacency
 
 
-# Test function that will import data, call the functions, and print the results
-def testFromFile(filename):
+# Helper function to import formatted graph data from a file
+def load(filename):
 	# Read in data from a file with the format given on reddit
 	data = open(filename, 'r')
 	num_nodes = int(data.readline())
@@ -53,14 +52,23 @@ def testFromFile(filename):
 		edges.append( (N1,N2) )
 		input = data.readline()
 	
+	data.close()
+	
+	return (num_nodes, edges)
+
+
+# Test function that will import data, call the functions, and print the results
+def test(filename):
+	num_nodes, edges = load(filename)
+	
 	# Test degree function
-	degrees = graphDegree(num_nodes, edges)
+	degrees = degree(num_nodes, edges)
 	
 	for i in range(num_nodes):
 		print("Node", i+1, "has a degree of", degrees[i])
 	
 	# Test adjacency function
-	adj = graphAdjacency(num_nodes, edges)
+	adj = adjacency(num_nodes, edges)
 	
 	for i in range(num_nodes):
 		for j in range(num_nodes):
