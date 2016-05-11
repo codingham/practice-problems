@@ -5,7 +5,7 @@
 
 import easy_266 as easy
 import math
-from queue import Queue
+from queue import PriorityQueue
 
 
 def ecc(A, v):
@@ -17,24 +17,24 @@ def ecc(A, v):
 	dist = [math.inf]*N
 	visited = [False]*N
 	
-	# Visit queue
-	to_visit = Queue()
-	to_visit.put(v-1)
-	
 	# Initial distance
 	dist[v-1] = 0
 	
+	# Visit queue
+	to_visit = PriorityQueue()
+	to_visit.put( (dist[v-1], v-1) )
+	
 	# Dijkstra's algorithm
 	while not to_visit.empty():
-		node = to_visit.get()
+		d, node = to_visit.get()
 		visited[node] = True
 		
 		for i in range(N):
 			if A[node][i] and not visited[i]:
-				to_visit.put(i)
-				
 				if (dist[node]+1) < dist[i]:
 					dist[i] = dist[node] + 1
+				
+				to_visit.put( (dist[i], i) )
 	
 	return max(i for i in dist if i is not math.inf)
 
