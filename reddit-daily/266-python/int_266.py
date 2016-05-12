@@ -15,26 +15,25 @@ def ecc(A, v):
 	# Distance and visitation arrays
 	N = len(A)
 	dist = [math.inf]*N
-	visited = [False]*N
+	visited = []
 	
 	# Initial distance
 	dist[v-1] = 0
 	
-	# Visit queue
-	to_visit = PriorityQueue()
-	to_visit.put( (dist[v-1], v-1) )
-	
 	# Dijkstra's algorithm
-	while not to_visit.empty():
-		d, node = to_visit.get()
-		visited[node] = True
+	while len(visited) != N:
+		# Grab the next node to visit by:
+		#  1. Create a sub-list of distances of unvisited nodes
+		#  2. Find the minimum distance from this reduced set
+		d, node = min((dist[i], i) for i in range(N) if i not in visited)
 		
+		# Add node to visited node set
+		visited.append(node)
+		
+		# Update all neighbors of the current node with new distances
 		for i in range(N):
-			if A[node][i] and not visited[i]:
-				if (dist[node]+1) < dist[i]:
-					dist[i] = dist[node] + 1
-				
-				to_visit.put( (dist[i], i) )
+			if A[node][i] and ((dist[node]+1) < dist[i]):
+				dist[i] = dist[node] + 1
 	
 	return max(i for i in dist if i is not math.inf)
 
@@ -49,7 +48,7 @@ def eccAll(A):
 
 def rad(A):
 	ex = eccAll(A)
-	return min(ex)
+	return min(i for i in ex if i > 0)
 
 
 def diam(A):
