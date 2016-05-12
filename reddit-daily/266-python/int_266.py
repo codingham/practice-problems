@@ -5,7 +5,6 @@
 
 import easy_266 as easy
 import math
-from queue import PriorityQueue
 
 
 def ecc(A, v):
