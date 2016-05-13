@@ -4,35 +4,12 @@
 import easy_266 as easy
 
 
-# Return a new list that is the intersection of two lists
-def setIntersect(A, B):
-	s = [e for e in A if e in B]
-	return s
-
-
-# Return a new list that is the union of two lists
-def setUnion(A, B):
-	# Find common elements
-	s = setIntersect(A, B)
-	
-	# Initialize final set with all elements of A
-	u = [e for e in A]
-	
-	# Add all remaining elements of B into the final set,
-	# using the intersection to prevent adding elements twice
-	for e in B:
-		if e not in s:
-			u.append(e)
-	
-	return u
-
-
-# Return a list of v's neighbors using adjacency matrix A
+# Return a set of v's neighbors using adjacency matrix A
 def getNeighbors(A, v):
-	Nv = []
+	Nv = set()
 	for i in range(len(A)):
 		if A[v][i] and (v-1) != i:
-			Nv.append(i)
+			Nv.add(i)
 	
 	return Nv
 
@@ -45,23 +22,23 @@ def BronKerbosch(R, P, X, A, C):
 	
 	# Report that a clique has been found, if possible
 	if len(P) == 0 and len(X) == 0:
-		C.append([i+1 for i in R])
+		C.append(sorted(i+1 for i in R))
 	
-	for v in P:
+	for v in set(P):
 		# Recursive step
 		Nv = getNeighbors(A, v)
-		BronKerbosch(setUnion(R,[v]), setIntersect(P,Nv), setIntersect(X,Nv), A, C)
+		BronKerbosch(R | set([v]), P & Nv, X & Nv, A, C)
 		
 		# Remove v from P and add it to X
-		P = [i for i in P if i != v]
-		X.append(v)
+		P.remove(v)
+		X.add(v)
 
 
 # Return all maximum sized cliques in a graph using its adjacency matrix
 def getMaxCliques(A):
 	# Get all cliques
 	cliques = []
-	BronKerbosch([], list(range(len(A))), [], A, cliques)
+	BronKerbosch(set(), set(range(len(A))), set(), A, cliques)
 	
 	# Determine the clique with the largest connectivity
 	max_conn = max(len(L) for L in cliques)
